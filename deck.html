@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OYNA — taqdimot (10 slayd)</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .deck-body {
+        background: #e9e3d9;
+        font-family: var(--font);
+        color: var(--ink);
+      }
+      .deck-bar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+        padding: 11px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        font-size: 13px;
+      }
+      .deck-bar b {
+        font-weight: 800;
+      }
+      .deck-bar .spacer {
+        margin-left: auto;
+      }
+      .deck {
+        display: grid;
+        gap: 26px;
+        padding: 26px 16px 60px;
+        justify-content: center;
+      }
+      .slide {
+        width: min(1120px, 96vw);
+        aspect-ratio: 16 / 9;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 26px 60px -34px rgba(10, 29, 38, 0.5);
+        padding: 44px 48px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+      .slide--dark {
+        background:
+          radial-gradient(700px 320px at 88% 6%, rgba(239, 78, 120, 0.4), transparent 62%),
+          linear-gradient(135deg, #08181f, #0b3f45 58%, #08605c);
+        color: #fff;
+      }
+      .slide__top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--teal-d);
+        margin-bottom: 14px;
+      }
+      .slide--dark .slide__top {
+        color: rgba(255, 255, 255, 0.62);
+      }
+      .slide__num {
+        margin-left: auto;
+        font-weight: 700;
+        letter-spacing: 0;
+        color: var(--muted);
+      }
+      .slide h2 {
+        font-size: clamp(24px, 3vw, 40px);
+        line-height: 1.06;
+        letter-spacing: -0.035em;
+        font-weight: 800;
+        max-width: 22ch;
+      }
+      .slide h3 {
+        font-size: 17px;
+        letter-spacing: -0.015em;
+        font-weight: 780;
+      }
+      .slide p {
+        font-size: 14.4px;
+        color: var(--ink-2);
+        line-height: 1.5;
+      }
+      .slide--dark p {
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .deck-cols {
+        display: grid;
+        gap: 14px;
+        margin-top: auto;
+        align-content: end;
+      }
+      .c2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .c3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .c4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .dbox {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 15px;
+      }
+      .slide--dark .dbox {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+      .slide--dark .dbox p {
+        color: rgba(255, 255, 255, 0.78);
+      }
+      .dbox b {
+        display: block;
+        font-size: 14.5px;
+        letter-spacing: -0.01em;
+        margin-bottom: 4px;
+      }
+      .dbox p {
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .dnum {
+        background: var(--teal-l);
+        border-radius: 14px;
+        padding: 14px;
+      }
+      .dnum b {
+        display: block;
+        font-size: 26px;
+        letter-spacing: -0.03em;
+        font-weight: 800;
+        color: var(--teal-d);
+      }
+      .dnum span {
+        font-size: 12px;
+        color: var(--ink-2);
+        line-height: 1.35;
+        display: block;
+        margin-top: 2px;
+      }
+      .cover-mark {
+        width: 54px;
+        height: 54px;
+        border-radius: 15px;
+        background: radial-gradient(circle at 30% 25%, #17c2b3, var(--teal) 55%, var(--teal-d));
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 800;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      .cover h1 {
+        font-size: clamp(38px, 5vw, 68px);
+        line-height: 0.98;
+        letter-spacing: -0.045em;
+        font-weight: 800;
+      }
+      .cover .tag {
+        font-size: clamp(15px, 1.7vw, 19px);
+        margin-top: 14px;
+        max-width: 46ch;
+        color: rgba(255, 255, 255, 0.82);
+      }
+      .cover__foot {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 12.5px;
+      }
+      .cover__foot span {
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        border-radius: 100px;
+        padding: 7px 14px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 650;
+      }
+      .slide--flower::after {
+        content: "";
+        position: absolute;
+        right: -90px;
+        bottom: -90px;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(239, 78, 120, 0.14), transparent 68%);
+      }
+      .ttl {
+        margin-bottom: 18px;
+      }
+      .q {
+        background: var(--bg-2);
+        border-radius: 14px;
+        padding: 16px 18px;
+        font-size: 15px;
+        line-height: 1.45;
+        color: var(--ink);
+        letter-spacing: -0.015em;
+      }
+      .q small {
+        display: block;
+        color: var(--muted);
+        font-size: 11.5px;
+        margin-top: 8px;
+        letter-spacing: 0;
+      }
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: auto;
+      }
+      .fl {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        padding: 13px;
+        position: relative;
+      }
+      .fl b {
+        display: block;
+        font-size: 13.6px;
+        margin-bottom: 4px;
+      }
+      .fl p {
+        font-size: 12.2px;
+      }
+      .fl span {
+        display: inline-grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+      .shots {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: auto;
+      }
+      .shot {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      .shot__bar {
+        background: #fff;
+        border-bottom: 1px solid var(--line-2);
+        font-size: 10.5px;
+        font-weight: 800;
+        padding: 6px 9px;
+        color: var(--ink-2);
+      }
+      .shot__body {
+        padding: 9px;
+        display: grid;
+        gap: 6px;
+      }
+      .ln {
+        height: 7px;
+        border-radius: 4px;
+        background: rgba(10, 29, 38, 0.1);
+      }
+      .ln--t {
+        background: var(--teal);
+        width: 65%;
+      }
+      .ln--c {
+        background: rgba(239, 78, 120, 0.55);
+        width: 45%;
+      }
+      .blk {
+        height: 34px;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid var(--line);
+      }
+      .blk--teal {
+        background: var(--teal-l);
+        border-color: rgba(14, 139, 132, 0.25);
+      }
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 14px;
+      }
+      .rowline {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+      .num-led {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--ink-2);
+        padding: 9px 0;
+        border-bottom: 1px dashed var(--line);
+      }
+      .num-led b {
+        margin-left: auto;
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .deep {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 14px;
+        padding: 15px;
+      }
+      .deep b {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      .deep p {
+        font-size: 12.6px;
+        color: rgba(255, 255, 255, 0.78);
+      }
+      .foot-note {
+        margin-top: 12px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .slide--dark .foot-note {
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      @media (max-width: 900px) {
+        .slide {
+          aspect-ratio: auto;
+          padding: 26px 22px;
+        }
+        .c4,
+        .c3,
+        .c2,
+        .flow,
+        .shots,
+        .rowline {
+          grid-template-columns: 1fr 1fr;
+        }
+        .slide h2 {
+          max-width: none;
+        }
+      }
+      @media (max-width: 600px) {
+        .c4,
+        .c3,
+        .c2,
+        .flow,
+        .shots,
+        .rowline {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @page {
+        size: 1120px 630px;
+        margin: 0;
+      }
+      @media print {
+        .deck-body {
+          background: #fff;
+        }
+        .deck-bar {
+          display: none;
+        }
+        .deck {
+          padding: 0;
+          gap: 0;
+          display: block;
+        }
+        .slide {
+          width: 1120px;
+          height: 630px;
+          aspect-ratio: auto;
+          border-radius: 0;
+          box-shadow: none;
+          break-after: page;
+          page-break-after: always;
+        }
+        .slide:last-child {
+          break-after: auto;
+          page-break-after: auto;
+        }
+      }
+    </style>
+  </head>
+  <body class="deck-body">
+    <div class="deck-bar">
+      <b>OYNA — taqdimot</b>
+      <span class="muted">10 slayd · “Raqamli avlod qizlari” respublika tanlovi 2026</span>
+      <span class="spacer"></span>
+      <a class="btn btn--ghost btn--sm" href="index.html">← Sayt</a>
+      <a class="btn btn--teal btn--sm" href="app.html">Prototip</a>
+    </div>
+
+    <div class="deck">
+      <!-- 1 -->
+      <section class="slide slide--dark cover">
+        <div class="cover-mark">O</div>
+        <h1>OYNA</h1>
+        <p class="tag">
+          O'zbek tilida gapiradigan AI ustoz. Qishloqdagi qizga 90 kunda kasb, portfolio va
+          birinchi to'langan buyurtmagacha yo'l ko'rsatadi.
+        </p>
+        <div style="margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap">
+          <span class="eyebrow">Sun'iy intellekt</span>
+          <span class="eyebrow">Ta'lim</span>
+          <span class="eyebrow eyebrow--coral">Yashil iqtisodiyot moduli</span>
+        </div>
+        <div class="cover__foot">
+          <span>Raqamli avlod qizlari · 2026</span>
+          <span>Prototip: app.html</span>
+          <span>[Jamoa nomi] · [telefon] · [email]</span>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="slide">
+        <div class="slide__top">01 · Muammo <span class="slide__num">2 / 10</span></div>
+        <h2 class="ttl">Qizlar o'qishni xohlaydi. Yo'l yo'q.</h2>
+        <div class="deck-cols c4">
+          <div class="dbox">
+            <b>🚌 Masofa</b>
+            <p>Tuman markazigacha 1–2 soat. Har kuni takrorlanmaydi.</p>
+          </div>
+          <div class="dbox">
+            <b>🗣️ Til</b>
+            <p>IT kontenti asosan rus/ingliz tilida. O'zbekcha ustoz deyarli yo'q.</p>
+          </div>
+          <div class="dbox">
+            <b>🏠 Ishonch</b>
+            <p>Ota-ona nimani ko'rishini bilmasa — ruxsat bermaydi.</p>
+          </div>
+          <div class="dbox">
+            <b>💸 Natija</b>
+            <p>Kurs tugaydi, sertifikat qoladi, ish boshlanmaydi.</p>
+          </div>
+        </div>
+        <div class="deck-cols c2" style="margin-top: 14px">
+          <div class="q">
+            “Men o'qiyman, lekin nimani o'qiyotganimni va bu menga qanday ish berishini
+            bilmayman. Uyda hech kim bu sohada ishlamagan.”
+            <small>— 16 yoshli qiz, pilot suhbat (Namangan viloyati)</small>
+          </div>
+          <div class="dnum">
+            <b>1 mln+</b>
+            <span>qishloqda yashovchi 15–24 yoshli qizlar (taxminiy hisob)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="slide slide--flower">
+        <div class="slide__top">02 · Nega aynan hozir <span class="slide__num">3 / 10</span></div>
+        <h2 class="ttl">Davlat ham, bozor ham qizlarni kutmoqda</h2>
+        <div class="deck-cols c4">
+          <div class="dnum">
+            <b>~25%</b>
+            <span>IT sohasida ayollar ulushi — bozor ochiq</span>
+          </div>
+          <div class="dnum">
+            <b>2030</b>
+            <span>“Raqamli O'zbekiston” — raqamli ko'nikmalar ustuvor</span>
+          </div>
+          <div class="dnum">
+            <b>↑↑</b>
+            <span>Freelance xizmatlarga talab yildan-yilga o'smoqda</span>
+          </div>
+          <div class="dnum">
+            <b>Android</b>
+            <span>Arzon telefonlar ulushi yuqori — mahsulot shunga mos</span>
+          </div>
+        </div>
+        <div class="deck-cols c2" style="margin-top: 14px">
+          <div class="dbox">
+            <b>Texnologiya imkon berdi</b>
+            <p>
+              O'zbek tilini yaxshi tushunadigan AI modellari endi arzon va telefonda ishlaydi.
+              Bunday mahsulot 3 yil oldin qurilmasdi.
+            </p>
+          </div>
+          <div class="dbox">
+            <b>Lekin hech kim qilmadi</b>
+            <p>
+              Mavjud platformalar shahar, rus tili va videoni nazarda tutadi. Qishloq qizi va
+              ota-onasi uchun qurilgan mahsulot yo'q.
+            </p>
+          </div>
+        </div>
+        <div class="foot-note">Raqamlar taxminiy; yakuniy arizada rasmiy statistika bilan tekshiriladi.</div>
+      </section>
+
+      <!-- 4 -->
+      <section class="slide">
+        <div class="slide__top">03 · Yechim <span class="slide__num">4 / 10</span></div>
+        <h2 class="ttl">Bitta ilova: ustoz, reja, mentor, birinchi buyurtma</h2>
+        <div class="deck-cols c2" style="grid-template-columns: 1fr 1fr">
+          <div class="dbox">
+            <b>🤖 Oy — AI ustoz</b>
+            <p>O'zbek tilida yozadi va gapiradi. Tushunmasangiz — boshqacha tushuntiradi.</p>
+          </div>
+          <div class="dbox">
+            <b>🗺️ 90 kunlik shaxsiy reja</b>
+            <p>Tuman, qiziqish va kuniga ajratilgan vaqtga moslab tuziladi.</p>
+          </div>
+          <div class="dbox">
+            <b>📶 Offline-first darslar</b>
+            <p>1 MB haftalik kontent, 3G'da ishlaydi, 1 GB RAM telefonda ochiladi.</p>
+          </div>
+          <div class="dbox">
+            <b>👨‍👩‍👧 Ota-ona ko'rinishi</b>
+            <p>Faqat progress, mentor ismi va xavfsizlik. Yozishmalar ko'rinmaydi.</p>
+          </div>
+        </div>
+        <div class="deck-cols c2" style="margin-top: 14px">
+          <div class="dbox">
+            <b>🤝 Ona-mentor tarmog'i</b>
+            <p>Viloyatdagi ishlayotgan ayollar — dizayner, dasturchi, marketolog.</p>
+          </div>
+          <div class="dbox">
+            <b>🧾 Birinchi daromad</b>
+            <p>Portfolio shabloni, narx kalkulyatori, mijozga yozish namunasi.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="slide">
+        <div class="slide__top">04 · Qanday ishlaydi <span class="slide__num">5 / 10</span></div>
+        <h2 class="ttl">2 daqiqada kirish — har kuni bitta qadam</h2>
+        <div class="flow">
+          <div class="fl">
+            <span>1</span>
+            <b>Kirish</b>
+            <p>Ism, tuman, qiziqish, kunlik vaqt. Bepul, ro'yxat shart emas.</p>
+          </div>
+          <div class="fl">
+            <span>2</span>
+            <b>Reja</b>
+            <p>90 kun: asos → portfolio → birinchi buyurtma. 12 hafta.</p>
+          </div>
+          <div class="fl">
+            <span>3</span>
+            <b>Kunlik dars</b>
+            <p>5–7 daqiqa: matn, amaliy vazifa, 3 savol. Ketma-ketlik kuzatiladi.</p>
+          </div>
+          <div class="fl">
+            <span>4</span>
+            <b>Natija</b>
+            <p>Mentor, portfolio va to'langan birinchi buyurtma.</p>
+          </div>
+        </div>
+        <div class="deck-cols c2" style="margin-top: 14px">
+          <div class="dbox">
+            <b>Nima uchun video emas?</b>
+            <p>
+              Video trafikni yeydi va telefonda og'ir. Matn + test 1 MB ichida sig'adi va
+              sekin internetda ham ishlaydi.
+            </p>
+          </div>
+          <div class="dbox">
+            <b>Nima uchun 5 daqiqa?</b>
+            <p>
+              Kuniga 2 soatdan ko'ra 30 kun ketma-ket 5 daqiqa samaraliroq. Odat — natijaning
+              asosi.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="slide slide--flower">
+        <div class="slide__top">05 · Prototip <span class="slide__num">6 / 10</span></div>
+        <h2 class="ttl">Bugun ishlaydigan demo — tanlov stolida ochiladi</h2>
+        <div class="shots">
+          <div class="shot">
+            <div class="shot__bar">Reja · 90 kun</div>
+            <div class="shot__body">
+              <div class="ln ln--t"></div>
+              <div class="blk blk--teal"></div>
+              <div class="blk"></div>
+              <div class="ln"></div>
+              <div class="blk"></div>
+            </div>
+          </div>
+          <div class="shot">
+            <div class="shot__bar">Oy · AI ustoz</div>
+            <div class="shot__body">
+              <div class="blk blk--teal"></div>
+              <div class="ln ln--c" style="justify-self: end"></div>
+              <div class="blk blk--teal"></div>
+              <div class="ln ln--t"></div>
+            </div>
+          </div>
+          <div class="shot">
+            <div class="shot__bar">Ota-ona ko'rinishi</div>
+            <div class="shot__body">
+              <div class="ln"></div>
+              <div class="blk"></div>
+              <div class="ln ln--t"></div>
+              <div class="blk blk--teal"></div>
+            </div>
+          </div>
+        </div>
+        <div class="deck-cols c2" style="margin-top: 14px">
+          <div class="dbox">
+            <b>Demo tarkibi</b>
+            <p>
+              Onboarding · AI suhbat · 90 kunlik reja · to'liq dars va test · mentor · ota-ona
+              ko'rinishi. Internet kerak emas.
+            </p>
+          </div>
+          <div class="dbox">
+            <b>Nima demo emas</b>
+            <p>
+              AI javoblari prototipda tayyorlangan; haqiqiy model serverda ulanadi. Bu halol
+              aytiladi — hakamlar kodni ko'rishi mumkin.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="slide slide--dark">
+        <div class="slide__top">06 · Innovatsiya <span class="slide__num">7 / 10</span></div>
+        <h2 class="ttl" style="color: #fff">To'rtta farq — to'rtta sabab</h2>
+        <div class="deck-cols c2">
+          <div class="deep">
+            <b>01 · AI o'zbek tilida, ovoz bilan</b>
+            <p>Savolni yozmasdan aytib berish mumkin. Texnik ingliz tili endi to'siq emas.</p>
+          </div>
+          <div class="deep">
+            <b>02 · Ota-ona uchun qurilgan</b>
+            <p>Qishloqda qarorni ota-ona qabul qiladi. Ishonch — mahsulotning markazi.</p>
+          </div>
+          <div class="deep">
+            <b>03 · Kurs emas — daromad</b>
+            <p>KPI: “nechta qiz birinchi pulini topdi”, “nechta video ko'rildi” emas.</p>
+          </div>
+          <div class="deep">
+            <b>04 · Arzon infratuzilma</b>
+            <p>Bir qizning yillik xarajati ~8$. Homiy uchun 1 qiz — 12$.</p>
+          </div>
+        </div>
+        <p style="margin-top: auto; font-size: 13.5px">
+          Raqobatchilar: xalqaro MOOC platformalar (til, narx, video), mahalliy o'quv markazlari
+          (faqat shahar, faqat oflayn). Bizning joy — qishloq qizi va uning oilasi.
+        </p>
+      </section>
+
+      <!-- 8 -->
+      <section class="slide">
+        <div class="slide__top">07 · Ta'sir va o'lchov <span class="slide__num">8 / 10</span></div>
+        <h2 class="ttl">Pilot: 3 viloyat · 1 000 qiz · 6 oy</h2>
+        <div class="deck-cols c4">
+          <div class="dnum"><b>1 000</b><span>pilotdagi qizlar (Namangan, Qashqadaryo, Xorazm)</span></div>
+          <div class="dnum"><b>≥ 60%</b><span>90 kunni tugatish (onlayn kurslarda odatda 10–15%)</span></div>
+          <div class="dnum"><b>≥ 15%</b><span>birinchi to'langan buyurtma — asosiy KPI</span></div>
+          <div class="dnum"><b>≥ 80%</b><span>ota-onaning ijobiy bahosi</span></div>
+        </div>
+        <div class="deck-cols c2" style="margin-top: 16px">
+          <div class="dbox">
+            <b>Qanday o'lchaymiz</b>
+            <p>
+              Anonim ID bo'yicha progress; 10% kohort bilan telefon so'rovi; buyurtma faqat mentor
+              tasdig'i bilan hisoblanadi; chorakda mustaqil kuzatuvchi tekshiradi.
+            </p>
+          </div>
+          <div class="dbox">
+            <b>Uzoq muddat</b>
+            <p>
+              2027: 10 000 qiz, 500 mentor. 2028: 50 000 qiz — barcha viloyatlar. Har bir mentor
+              yiliga 24 qizga yo'l ko'rsatadi.
+            </p>
+          </div>
+        </div>
+        <div class="foot-note">Bu ko'rsatkichlar — maqsad (target), erishilgan natija emas.</div>
+      </section>
+
+      <!-- 9 -->
+      <section class="slide slide--flower">
+        <div class="slide__top">08 · Barqarorlik <span class="slide__num">9 / 10</span></div>
+        <h2 class="ttl">Qiz uchun bepul. Xarajatni kim qoplaydi?</h2>
+        <div class="deck-cols c3">
+          <div class="dbox">
+            <b>CSR homiylik · asosiy</b>
+            <p>
+              Telekom, bank, IT kompaniyalar “1 qiz — 1 yil” homiyligini oladi va o'lchanadigan
+              hisobot bilan brend ko'rinishini qozonadi.
+            </p>
+          </div>
+          <div class="dbox">
+            <b>Davlat va grantlar</b>
+            <p>IT Park, vazirlik va xalqaro fondlar — pilotni kengaytirish uchun.</p>
+          </div>
+          <div class="dbox">
+            <b>Xizmat bozori · o'sish</b>
+            <p>Birinchi buyurtmalarda 10% komissiya; kompaniyalar uchun tekshirilgan sertifikat.</p>
+          </div>
+        </div>
+        <div class="rowline" style="margin-top: 16px">
+          <div>
+            <div class="num-led"><span>1 qizning yillik xarajati (AI + trafik + mentor ulushi)</span><b>~8$</b></div>
+            <div class="num-led"><span>Homiylik paketi narxi</span><b>12$</b></div>
+            <div class="num-led"><span>1$ investitsiya bilan qamrab olinadigan qiz</span><b>0,125</b></div>
+            <div class="num-led"><span>Maqsad: o'zini qoplash muddati</span><b>2028</b></div>
+          </div>
+          <div class="dbox">
+            <b>Nega bu ishlaydi</b>
+            <p>
+              Xarajat video platformalarga qaraganda 10 baravar past: matn, test va arzon AI.
+              Homiylik paketi xarajatdan yuqori — har bir homiylik yangi qizni qoplaydi.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section class="slide slide--dark">
+        <div class="slide__top">09 · Reja va jamoa <span class="slide__num">10 / 10</span></div>
+        <h2 class="ttl" style="color: #fff">Tanlovdan keyingi 18 oy</h2>
+        <div class="deck-cols c4">
+          <div class="deep">
+            <b>Noy 2026</b>
+            <p>Final — ishlaydigan prototip va demo.</p>
+          </div>
+          <div class="deep">
+            <b>Dek 2026</b>
+            <p>50 qiz, 1 tuman, 2 mentor. 3 ta birinchi buyurtma.</p>
+          </div>
+          <div class="deep">
+            <b>Yan–Fev 2027</b>
+            <p>3 viloyat, 1 000 qiz, homiy shartnomasi.</p>
+          </div>
+          <div class="deep">
+            <b>2027–2028</b>
+            <p>Ovozli AI, 10 000 → 50 000 qiz, 500 mentor.</p>
+          </div>
+        </div>
+        <div class="rowline" style="margin-top: 16px">
+          <div>
+            <p style="font-size: 13px">
+              <b style="color: #fff">Jamoa:</b> [Ism Familiya] — mahsulot va tadqiqot · [Ism
+              Familiya] — AI va texnologiya · [Ism Familiya] — mentorlar tarmog'i va hamkorlik.
+            </p>
+            <p style="font-size: 12.5px; margin-top: 8px">
+              <b style="color: #fff">So'rov:</b> pilot uchun mentor tarmog'i va 1 000 qizni qamrab
+              olishga ko'mak; homiy tashkilotlar bilan tanishtirish.
+            </p>
+          </div>
+          <div class="deep">
+            <b>Bizga nima kerak</b>
+            <p>3 viloyatda 2 ta hamkor tashkilot · 1 homiy · mentorlar uchun trening dasturi.</p>
+          </div>
+        </div>
+        <p style="margin-top: auto; font-size: 12px; color: rgba(255, 255, 255, 0.6)">
+          OYNA · [telefon] · [email] · Prototip: app.html
+        </p>
+      </section>
+    </div>
+  </body>
+</html>
